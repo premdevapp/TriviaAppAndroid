@@ -27,4 +27,12 @@ public class Question {
     public void setAnswerTrue(boolean answerTrue) {
         this.answerTrue = answerTrue;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "answer='" + answer + '\'' +
+                ", answerTrue=" + answerTrue +
+                '}';
+    }
 }
