@@ -10,8 +10,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="378dp"
-        android:layout_height="106dp"
+        android:layout_width="354dp"
+        android:layout_height="107dp"
         android:layout_marginTop="80dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="7dp"
@@ -24,7 +24,10 @@
             android:id="@+id/questionView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/white"
             android:text="@string/QuestionText"
+            android:textColor="@color/black"
             android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 
@@ -78,7 +81,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="25dp"
             android:backgroundTint="#A63838"
-            android:text="@string/button_true" />
+            android:text="@string/button_true"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/falseButton"
@@ -86,7 +90,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:backgroundTint="#A63838"
-            android:text="@string/button_false" />
+            android:text="@string/button_false"
+            android:textColor="@color/white" />
 
         <ImageButton
             android:id="@+id/nextButton"

@@ -1,10 +1,15 @@
 package com.example.trivia;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -26,10 +31,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int currentQuestionIndex = 0;
     private List<Question> questionList;
 
+    private CardView cardView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cardView = findViewById(R.id.cardView);
 
         //textView
         questionTextView = findViewById(R.id.questionView);
@@ -53,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void processFinished(ArrayList<Question> questionArrayList) {
                 questionTextView.setText(questionArrayList.get(currentQuestionIndex).getAnswer());
-                questionCounterText.setText((currentQuestionIndex + 1) + " / "+ questionList.size());
-                Log.d("Inside", "processFinished: "+ questionArrayList);
+                questionCounterText.setText((currentQuestionIndex + 1) + " / " + questionList.size());
+                Log.d("Inside", "processFinished: " + questionArrayList);
             }
         });
 
@@ -64,14 +73,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.prevButton:
-                if(currentQuestionIndex > 0){
-                    currentQuestionIndex = (currentQuestionIndex-1) % questionList.size();
-                }else {
-                    currentQuestionIndex = questionList.size()-1;
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex = (currentQuestionIndex - 1) % questionList.size();
+                } else {
+                    currentQuestionIndex = questionList.size() - 1;
                 }
-                    updateQuestion();
+                updateQuestion();
                 break;
             case R.id.nextButton:
                 currentQuestionIndex = (currentQuestionIndex + 1) % questionList.size();
@@ -79,29 +88,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.trueButton:
                 checkAnswer(true);
-                Log.d("Check", "onClick: True ");
+                updateQuestion();
+                //Log.d("Check", "onClick: True ");
                 break;
             case R.id.falseButton:
                 checkAnswer(false);
-                Log.d("Check", "onClick: False ");
+                updateQuestion();
+                //Log.d("Check", "onClick: False ");
                 break;
 
         }
 
     }
-    private void updateQuestion(){
+
+    private void updateQuestion() {
         String question = questionList.get(currentQuestionIndex).getAnswer();
         questionTextView.setText(question);
-        questionCounterText.setText((currentQuestionIndex + 1) + " / "+ questionList.size());
+        questionCounterText.setText((currentQuestionIndex + 1) + " / " + questionList.size());
     }
-    private void checkAnswer(boolean userChoice){
+
+    private void checkAnswer(boolean userChoice) {
         int toastMessage = 0;
         boolean answer = questionList.get(currentQuestionIndex).isAnswerTrue();
-        if(answer == userChoice){
+        if (answer == userChoice) {
+            fadeView();
             toastMessage = R.string.correct_answer;
-        }else {
+        } else {
+            shakeAnimation();
             toastMessage = R.string.wrong_answer;
         }
         Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    private void fadeView(){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setDuration(200);
+        alphaAnimation.setRepeatCount(1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+        cardView.setAnimation(alphaAnimation);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                cardView.setCardBackgroundColor(Color.GREEN);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                cardView.setCardBackgroundColor(Color.WHITE);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void shakeAnimation() {
+        Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake_animation);
+
+        cardView.setAnimation(shake);
+
+        shake.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                cardView.setBackgroundColor(Color.RED);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                cardView.setBackgroundColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }
